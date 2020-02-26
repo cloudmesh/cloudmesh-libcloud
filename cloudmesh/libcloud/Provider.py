@@ -23,7 +23,7 @@ class Provider(ComputeNodeABC):
     ProviderMapper = {
         "openstack": LibcloudProvider.OPENSTACK,
         "aws": LibcloudProvider.EC2,
-        "google": LibcloudProvider.GCE,
+        "googlelibcloud": LibcloudProvider.GCE,
         "azure_arm": LibcloudProvider.AZURE_ARM
     }
 
@@ -35,7 +35,7 @@ class Provider(ComputeNodeABC):
     output = {"aws": {"vm": ....,,
                       "image": ....,,
                       "flavor": ....,,
-              "google": {"vm": ....,,
+              "googlelibcloud": {"vm": ....,,
                       "image": ....,,
                       "flavor": ....,,
     """
@@ -389,7 +389,7 @@ class Provider(ComputeNodeABC):
         :return: dict or libcloud object
         """
         if self.cloudman:
-            if self.cloudtype in ["openstack", "aws", "google"]:
+            if self.cloudtype in ["openstack", "aws", "googlelibcloud"]:
                 entries = self.cloudman.list_images()
                 if raw:
                     return entries
@@ -621,7 +621,7 @@ class Provider(ComputeNodeABC):
         # keyname = Config()["cloudmesh"]["profile"]["user"]
         # ex_keyname has to be the registered keypair name in cloud
 
-        if self.cloudtype in ["openstack", "aws", "google"]:
+        if self.cloudtype in ["openstack", "aws", "googlelibcloud"]:
             images = self.images(raw=True)
             for _image in images:
                 if _image.name == image:
@@ -696,7 +696,7 @@ class Provider(ComputeNodeABC):
                 ex_blob_container=kwargs["blob_container"],
                 ex_nic=nic_use
             )
-        elif self.cloudtype == 'google':
+        elif self.cloudtype == 'googlelibcloud':
             location_use = self.spec["credentials"]["datacenter"]
             metadata = {"items": [
                 {"value": self.user + ":" + self.key_val, "key": "ssh-keys"}]}
